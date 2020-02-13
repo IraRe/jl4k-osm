@@ -28,6 +28,9 @@
 # Troubleshooting
 
 `Connection refused` may happen if the database is not running.
+
 `The client is unauthorized due to authentication failure` happens if you have the authentication enabled and don’t provide proper credentials. 
+
 `There is no precedure with the name apoc.load.xml registered for this database instance.` happens if you don’t install the Apoc plugin.
+
 `Failed to invoce procedure apoc.load.xml: Caused by: java.lang.RuntimeException: Import from files not enabled.` occurs if you don’t add `apoc.import.file.enabled=true` to you settings
