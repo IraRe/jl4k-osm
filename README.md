@@ -23,6 +23,7 @@
 10. Copy the `map.xml` file into the import folder
 11. Open Terminal
 12. run `cat nodes.cypher | bin/cypher-shell` and `cat ways.cypher | bin/cypher-shell` in exactly this order
+    1. For Windows users you may try `type nodes.cypher | bin\cypher-shell` und `type ways.cypher | bin\cypher-shell` instead
 
 
 # Troubleshooting
