@@ -71,6 +71,50 @@ return p,r,s
 
 # More complex queries
 
+## Longest tram path
+```
+match p=()-[r:TRAM*]->() 
+return p, length(p) as pathLength 
+    order by pathLength desc limit 3
+```
+
+```
+match p=(start:Platform)-[r:TRAM*]->(stop:Platform) 
+return start, stop, length(p) as pathLength 
+    order by pathLength desc limit 3
+```
+
+## 5 neares restaurants
+```
+call apoc.spatial.geocode('Brühl, Wolkenburgstraße 18') yield latitude, longitude 
+	with point({latitude:latitude, longitude:longitude}) as home, latitude, longitude
+match (r:Restaurant) 
+return 
+    r.name as restaurant,
+	toInt(distance(point({ latitude:toFloat(r.latitude), longitude:toFloat(r.longitude)}), home)) as dist 
+order by dist limit 5
+```
+
+```
+call apoc.spatial.geocode('Brühl, Wolkenburgstraße 18') yield latitude as lat, longitude as lon
+with point({latitude:lat, longitude:lon}) as home
+match (r:Restaurant) 
+with r.name as restaurant, 
+    point({latitude:toFloat(r.latitude), longitude:toFloat(r.longitude)}) as p, 
+    home
+return restaurant, distance(home, p) as dist order by dist limit 5
+```
+
 # Graph algorithms
 
 # Tasks for participants
+
+```
+match path = (p1:Person {name:'Laura'})-[r:FRIEND*1..2]->(p2:Person)
+unwind nodes(path) as f
+    match (f)-[l:LIKES]->(n:OsmNode) where id(f) <> id(p1) 
+    with collect(distinct f) as friends
+unwind friends as friend
+    match (friend)-[l:LIKES]->(n:OsmNode)
+    return n.name, count(l) as likes order by likes desc
+```
