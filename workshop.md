@@ -84,20 +84,17 @@ return start, stop, length(p) as pathLength
     order by pathLength desc limit 3
 ```
 
-## 5 neares restaurants
 ```
-call apoc.spatial.geocode('Brühl, Wolkenburgstraße 18') yield latitude, longitude 
-	with point({latitude:latitude, longitude:longitude}) as home, latitude, longitude
-match (r:Restaurant) 
-return 
-    r.name as restaurant,
-	toInt(distance(point({ latitude:toFloat(r.latitude), longitude:toFloat(r.longitude)}), home)) as dist 
-order by dist limit 5
+match p=(start:Platform)-[r:TRAM*]->(stop:Platform) 
+	where id(start)<>id(stop)
+return start, stop, length(p) as pathLength, nodes(p) as stops
+    order by pathLength desc limit 3
 ```
 
+## 5 neares restaurants
 ```
 call apoc.spatial.geocode('Brühl, Wolkenburgstraße 18') yield latitude as lat, longitude as lon
-with point({latitude:lat, longitude:lon}) as home
+    with point({latitude:lat, longitude:lon}) as home
 match (r:Restaurant) 
 with r.name as restaurant, 
     point({latitude:toFloat(r.latitude), longitude:toFloat(r.longitude)}) as p, 
@@ -106,6 +103,22 @@ return restaurant, distance(home, p) as dist order by dist limit 5
 ```
 
 # Graph algorithms
+
+## Shortest path
+
+```
+match p=(n:Stop {name:'Max-Ernst-Museum'})-[:WAY*1..100]-(m:Stop {name:'Kölnstraße/Comesstraße'}) 
+    return p limit 25
+```
+
+```
+match p=shortestPath((n:Stop {name:'Max-Ernst-Museum'})-[:WAY*1..100]-(m:Stop {name:'Kölnstraße/Comesstraße'})) 
+    return p limit 25
+```
+### Task
+Find a shortest path between the stop 'Brühl Bahnhof' and 'Max-Ernst-Museum'
+
+## PageRank
 
 # Tasks for participants
 
