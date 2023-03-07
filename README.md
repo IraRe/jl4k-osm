@@ -5,33 +5,9 @@
 
 # JL4K how to start
 
-1. Install Neo4j Desktop: https://neo4j.com/download-neo4j-now/
-2. Create new empty local graph
-3. Configure the graph by clicking on “Manage” button
-4. Go to “Plugins” and install APOC and Graph Algorithms
-5. Go to “Settings” 
-6. Change/add following settings:
-```
-    # Whether requests to Neo4j are authenticated.
-    # To disable authentication, uncomment this line
-    dbms.security.auth_enabled=false
-    apoc.import.file.enabled=true
-```
-7. Start the database
-8. Open the installation folder by clicking on “Open folder” 
-9. Copy the cypher scripts `nodes.cypher` and `ways.cypher` into the installation folder
-10. Copy the `map.xml` file into the import folder
-11. Open Terminal
-12. run `cat nodes.cypher | bin/cypher-shell` and `cat ways.cypher | bin/cypher-shell` in exactly this order
-    1. For Windows users you may try `type nodes.cypher | bin\cypher-shell` und `type ways.cypher | bin\cypher-shell` instead
-
-
-# Troubleshooting
-
-`Connection refused` may happen if the database is not running.
-
-`The client is unauthorized due to authentication failure` happens if you have the authentication enabled and don’t provide proper credentials. 
-
-`There is no precedure with the name apoc.load.xml registered for this database instance.` happens if you don’t install the Apoc plugin.
-
-`Failed to invoce procedure apoc.load.xml: Caused by: java.lang.RuntimeException: Import from files not enabled.` occurs if you don’t add `apoc.import.file.enabled=true` to you settings
+1. Create a neo4j sandbox at https://sandbox.neo4j.com/
+2. Create new empty instance
+3. Open with Browser
+4. Copy the contents of the cypher script `nodes.cypher` into you Browser execution bar and run them.
+5. Then copy the contents of the cypher script `ways.cypher` into the Browser's execution bar and run the commands.
+   

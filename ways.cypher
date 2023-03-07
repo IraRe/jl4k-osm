@@ -1,7 +1,7 @@
-call apoc.load.xml('file:///map.xml', '//way', {}, false) 
+call apoc.load.xml('https://raw.githubusercontent.com/IraRe/jl4k-osm/master/map.xml', '//way', {}, false) 
     yield value as doc
     with doc._children as children, doc.id as id
-    with filter(child IN children WHERE child._type = 'nd') as refs, id
+    with [child IN children WHERE child._type = 'nd'] as refs, id
     foreach (idx in range(0,size(refs)-2) |
     	create (:Pair {first:refs[idx].ref, second:refs[idx+1].ref, id:id}));
 
@@ -13,12 +13,15 @@ delete p;
 
 match (p:Pair) delete p;
 
-call apoc.load.xml('file:///map.xml', '//way', {}, false) 
-    yield value as doc
-    match ()-[w:WAY]->() where w.id = doc.id
-    with filter(child in doc._children where child._type = 'tag') as tags, doc.id as id
-    unwind tags as tag
-    	create (t:Tag {id:id, key:tag.k, value:tag.v});
+create index way_id_index 
+for ()-[r:WAY]-()
+on (r.id);
+
+call apoc.periodic.iterate(
+        "call apoc.load.xml('https://raw.githubusercontent.com/IraRe/jl4k-osm/master/map.xml', '//way', {}, false) yield value as doc",
+        "match ()-[w:WAY]->() where w.id = doc.id with [child in doc._children where child._type = 'tag'] as tags, doc.id as id unwind tags as tag create (t:Tag {id:id, key:tag.k, value:tag.v})",
+        {batchSize:1000, iterateList:true}
+    );
 
 match (t:Tag {key:'maxspeed'})
 match ()-[w:WAY]->() where w.id = t.id

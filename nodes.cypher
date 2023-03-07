@@ -1,4 +1,4 @@
-call apoc.load.xml('file:///map.xml', '//node', {}, false) 
+call apoc.load.xml('https://raw.githubusercontent.com/IraRe/jl4k-osm/master/map.xml', '//node', {}, false) 
     yield value as doc 
 with doc.id as id,
     doc.lon as longitude, 
@@ -106,7 +106,7 @@ match (t:Tag {key:'VRS:ref'})<-[:HAS_TAG]-(n:OsmNode)
 match (t:Tag {key:'VRS:ref'})<-[:HAS_TAG]-(n:OsmNode)
 	detach delete t;
 
-match (n) where exists(n.refVRS) 
+match (n) where n.refVRS is not null 
 	set n.vrsRef = n.refVRS 
     remove n.refVRS;
 
